@@ -169,7 +169,9 @@ class PdfMutableDocument {
 
   pdfWidgets.Document build() {
     var doc = pdfWidgets.Document();
-    _pages.map((page) => doc.addPage(page.build(doc)));
+    for (var page in _pages) {
+      doc.addPage(page.build(doc));
+    }
     return doc;
   }
 
