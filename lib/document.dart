@@ -150,7 +150,7 @@ Future<Uint8List> generateDocument(PdfPageFormat format) async {
             decoration: const pw.BoxDecoration(
                 border: pw.Border(
                     bottom: pw.BorderSide(width: 0.5, color: PdfColors.grey))),
-            child: pw.Text('Portable Document Format',
+            child: pw.Text('Share Issurance Agreement',
                 style: pw.Theme.of(context)
                     .defaultTextStyle
                     .copyWith(color: PdfColors.grey)));
@@ -168,11 +168,11 @@ Future<Uint8List> generateDocument(PdfPageFormat format) async {
       build: (pw.Context context) => <pw.Widget>[
             pw.Header(
                 level: 0,
-                title: 'Portable Document Format',
+                title: 'Share Issurance Agreement',
                 child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: <pw.Widget>[
-                      pw.Text('Portable Document Format', textScaleFactor: 2),
+                      pw.Text('Share Issurance Agreement', textScaleFactor: 2),
                       pw.PdfLogo()
                     ])),
             pw.Paragraph(

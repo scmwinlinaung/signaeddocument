@@ -1,12 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
 class DocumentViewer extends StatelessWidget {
-  final pdf;
+  final Uint8List pdf;
 
-  const DocumentViewer({super.key, required this.pdf});
+  const DocumentViewer({key, required this.pdf});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +20,10 @@ class DocumentViewer extends StatelessWidget {
             child: PdfPreview(
               useActions: false,
               onError: (context, error) => CircularProgressIndicator(),
-              build: (format) => pdf,
+              build: (format) {
+                debugPrint(format.toString());
+                return pdf;
+              },
             )));
   }
 }

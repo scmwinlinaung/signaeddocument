@@ -49,6 +49,8 @@ dev_dependencies:
   path_provider: 
   pdf: ^3.8.4
   printing: ^5.9.3
+  pdf_image_renderer: 
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

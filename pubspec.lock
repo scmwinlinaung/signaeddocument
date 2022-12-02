@@ -254,6 +254,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.8.4"
+  pdf_image_renderer:
+    dependency: "direct dev"
+    description:
+      name: pdf_image_renderer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   petitparser:
     dependency: transitive
     description:

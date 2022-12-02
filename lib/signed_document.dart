@@ -151,7 +151,7 @@ Future<Uint8List> generateSignedDocument(
             decoration: const pw.BoxDecoration(
                 border: pw.Border(
                     bottom: pw.BorderSide(width: 0.5, color: PdfColors.grey))),
-            child: pw.Text('Portable Document Format',
+            child: pw.Text('Share Issurance Agreement',
                 style: pw.Theme.of(context)
                     .defaultTextStyle
                     .copyWith(color: PdfColors.grey)));
@@ -169,11 +169,11 @@ Future<Uint8List> generateSignedDocument(
       build: (pw.Context context) => <pw.Widget>[
             pw.Header(
                 level: 0,
-                title: 'Portable Document Format',
+                title: 'Share Issurance Agreement',
                 child: pw.Row(
                     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                     children: <pw.Widget>[
-                      pw.Text('Portable Document Format', textScaleFactor: 2),
+                      pw.Text('Share Issurance Agreement', textScaleFactor: 2),
                       pw.PdfLogo()
                     ])),
             pw.Paragraph(
@@ -278,7 +278,7 @@ Future<Uint8List> generateSignedDocument(
                 text:
                     'Text is available under the Creative Commons Attribution Share Alike License.'),
             pw.Align(
-                alignment: pw.Alignment.centerRight,
+                alignment: pw.Alignment.bottomRight,
                 child: pw.Container(
                   width: 200,
                   height: 200,
