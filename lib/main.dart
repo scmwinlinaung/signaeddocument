@@ -333,6 +333,7 @@ import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart' as pdf;
 import 'package:pdf/widgets.dart' as pdfWidget;
 import 'package:printing/printing.dart';
+import 'package:signaturepad/corp_action_stepper.dart';
 import 'document_viewer.dart';
 import 'pdf_editor_service.dart';
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
@@ -354,7 +355,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Edit Pdf Page'),
+      home: MyHomePage(title: ''),
     );
   }
 }
@@ -368,10 +369,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Uint8List _pdf = Uint8List(0);
-  bool edit = false;
-  ByteData _img = ByteData(0);
-  final _sign = GlobalKey<SignatureState>();
   // void _edit() async {
   // PdfMutableDocument doc =
   //     await PdfMutableDocument.asset("asset/pdf/company_registration.pdf");
@@ -381,121 +378,30 @@ class _MyHomePageState extends State<MyHomePage> {
   // print("PDF Edition Done");
   // }
 
-  Future<Uint8List> _editDocument(
-      PdfMutableDocument document, dynamic signatureImage) async {
-    var page = document.getPage(await document.getPageCount(
-            assetName: "asset/pdf/company_registration.pdf") -
-        1);
-    page.add(
-        item: pdfWidget.Positioned(
-            right: 0.0,
-            bottom: 0.0,
-            child: pw.Align(
-                alignment: pw.Alignment.bottomRight,
-                child: pw.Container(
-                  width: 220,
-                  height: 220,
-                  child: pw.Image(signatureImage),
-                ))));
-    return await document.save(filename: "modified.pdf");
-  }
+  // Future<Uint8List> _editDocument(
+  //     PdfMutableDocument document, dynamic signatureImage) async {
+  //   var page = document.getPage(
+  //       await document.getPageCount("asset/pdf/company_registration.pdf") - 1);
+  //   page.add(
+  //       item: pdfWidget.Positioned(
+  //           right: 0.0,
+  //           bottom: 0.0,
+  //           child: pw.Align(
+  //               alignment: pw.Alignment.bottomRight,
+  //               child: pw.Container(
+  //                 width: 220,
+  //                 height: 220,
+  //                 child: pw.Image(signatureImage),
+  //               ))));
+  //   return await document.save("modified.pdf");
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        children: [
-          FutureBuilder(
-              // future: generateDocument(PdfPageFormat.letter),
-              future: PdfMutableDocument.readFile(
-                  filename: "asset/pdf/company_registration.pdf"),
-              builder: ((context, snapshot) {
-                if (snapshot.hasData) {
-                  final data = snapshot.data as Uint8List;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.55,
-                      child: PdfPreview(
-                        useActions: false,
-                        // pdfPreviewPageDecoration: BoxDecoration(),
-                        onError: (context, error) =>
-                            CircularProgressIndicator(),
-                        build: (format) => data,
-                      ),
-                    ),
-                  );
-                }
-                return const CircularProgressIndicator();
-              })),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.25,
-            width: MediaQuery.of(context).size.width * 0.95,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Signature(
-                color: Colors.black,
-                key: _sign,
-                onSign: () {
-                  final sign = _sign.currentState;
-                },
-                // backgroundPainter: _WatermarkPaint("2.0", "2.0"),
-                strokeWidth: 3,
-              ),
-            ),
-            color: Colors.black12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MaterialButton(
-                  color: Colors.green,
-                  onPressed: () async {
-                    final sign = _sign.currentState;
-                    //retrieve image data, do whatever you want with it (send to server, save locally...)
-                    final image = await sign!.getData();
-                    var data =
-                        await image.toByteData(format: ui.ImageByteFormat.png);
-                    sign.clear();
-                    // final encoded = base64.encode(data!.buffer.asUint8List());
-                    setState(() {
-                      _img = data!;
-                    });
-                    // debugPrint("onPressed " + encoded);
-
-                    final signatureImage =
-                        pw.MemoryImage(data!.buffer.asUint8List());
-
-                    PdfMutableDocument doc = await PdfMutableDocument.asset(
-                        "asset/pdf/company_registration.pdf");
-                    var fie = await _editDocument(doc, signatureImage);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DocumentViewer(
-                                pdf: fie,
-                              )),
-                    );
-                  },
-                  child: Text("Sign")),
-              MaterialButton(
-                  color: Colors.grey,
-                  onPressed: () {
-                    final sign = _sign.currentState;
-                    sign!.clear();
-                    setState(() {
-                      _img = ByteData(0);
-                    });
-                    debugPrint("cleared");
-                  },
-                  child: Text("Clear")),
-            ],
-          ),
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: const CorpActionStepper());
   }
 }

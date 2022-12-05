@@ -8,14 +8,12 @@ import 'package:printing/printing.dart';
 class DocumentViewer extends StatelessWidget {
   final Uint8List pdf;
 
-  const DocumentViewer({key, required this.pdf});
+  DocumentViewer({key, required this.pdf});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backwardsCompatibility: true,
-        ),
-        body: LimitedBox(
+    return Column(
+      children: [
+        LimitedBox(
             maxHeight: 1000,
             child: PdfPreview(
               useActions: false,
@@ -24,6 +22,30 @@ class DocumentViewer extends StatelessWidget {
                 debugPrint(format.toString());
                 return pdf;
               },
-            )));
+            )),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MaterialButton(
+                  color: Colors.green,
+                  minWidth: 150,
+                  onPressed: () {},
+                  child: Text(
+                    "Upload",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  )),
+              MaterialButton(
+                  color: Colors.grey,
+                  minWidth: 150,
+                  onPressed: () {},
+                  child: Text("Cancel",
+                      style: TextStyle(fontSize: 16, color: Colors.white))),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

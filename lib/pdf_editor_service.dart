@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -86,11 +87,30 @@ class _PdfFileHandler {
     return await document.save();
   }
 
-  static Future<Uint8List> readFile(String filename,
+  static Future<Uint8List> readFile(String assetName,
       {String? directory}) async {
-    final byteData = await rootBundle.load(filename);
+    final byteData = await rootBundle.load(assetName);
 
     return byteData.buffer.asUint8List();
+  }
+
+  static Future<Uint8List> sign(
+      String assetname, dynamic signatureImage) async {
+    PdfMutableDocument document = await PdfMutableDocument.asset(assetname);
+    var page = document.getPage(await document.getPageCount(assetname) - 1);
+    page.add(
+        item: pdfWidgets.Positioned(
+            right: 0.0,
+            bottom: 0.0,
+            child: pw.Align(
+                alignment: pw.Alignment.bottomRight,
+                child: pw.Container(
+                  width: 220,
+                  height: 220,
+                  child: pw.Image(signatureImage),
+                ))));
+
+    return document.save("modified.pdf");
   }
 }
 
@@ -126,32 +146,30 @@ class PdfMutablePage {
   }
 }
 
-class PdfImageProvider extends ImageProvider {
-  @override
-  ImageStreamCompleter load(
-      Object key,
-      Future<Codec> Function(Uint8List bytes,
-              {bool allowUpscaling, int cacheHeight, int cacheWidth})
-          decode) {
-    // TODO: implement load
-    throw UnimplementedError();
-  }
+// class PdfImageProvider extends ImageProvider {
+//   @override
+//   ImageStreamCompleter load(
+//       Object key,
+//       Future<Codec> Function(Uint8List bytes,
+//               {bool allowUpscaling, int cacheHeight, int cacheWidth})
+//           decode) {
+//     // TODO: implement load
+//     throw UnimplementedError();
+//   }
 
-  @override
-  Future<Object> obtainKey(ImageConfiguration configuration) {
-    // TODO: implement obtainKey
-    throw UnimplementedError();
-  }
-}
+//   @override
+//   Future<Object> obtainKey(ImageConfiguration configuration) {
+//     // TODO: implement obtainKey
+//     throw UnimplementedError();
+//   }
+// }
 
 class PdfMutableDocument {
-  String _filePath;
   final List<PdfMutablePage> _pages;
 
   PdfMutableDocument._(
       {required List<PdfMutablePage> pages, required String filePath})
-      : _pages = pages,
-        _filePath = filePath;
+      : _pages = pages;
 
   static Future<PdfMutableDocument> asset(String assetName) async {
     var copy = await _PdfFileHandler.getFileFromAssets(assetName);
@@ -175,16 +193,21 @@ class PdfMutableDocument {
     return doc;
   }
 
-  Future<Uint8List> save({required String filename}) async {
+  Future<Uint8List> save(String filename) async {
     return _PdfFileHandler.save(build(), filename);
   }
 
-  Future<int> getPageCount({required String assetName}) async {
+  Future<int> getPageCount(String assetName) async {
     var copy = await _PdfFileHandler.getFileFromAssets(assetName);
     return _PdfFileHandler.getPageCount(copy.path);
   }
 
-  static Future<Uint8List> readFile({required String filename}) async {
-    return _PdfFileHandler.readFile(filename);
+  static Future<Uint8List> readFile(String assetname) async {
+    return _PdfFileHandler.readFile(assetname);
+  }
+
+  static Future<Uint8List> sign(
+      String assetname, Uint8List signatureImage) async {
+    return _PdfFileHandler.sign(assetname, pw.MemoryImage(signatureImage));
   }
 }
