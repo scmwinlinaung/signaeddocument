@@ -94,19 +94,26 @@ class _PdfFileHandler {
     return byteData.buffer.asUint8List();
   }
 
-  static Future<Uint8List> sign(
-      String assetname, dynamic signatureImage) async {
+  static Future<Uint8List> sign(String assetname, dynamic signatureImage,
+      {double? left, double? top, double? right, double? bottom}) async {
     PdfMutableDocument document = await PdfMutableDocument.asset(assetname);
     var page = document.getPage(await document.getPageCount(assetname) - 1);
+    debugPrint(left.toString());
+    debugPrint(right.toString());
+    debugPrint(bottom.toString());
+    debugPrint(top.toString());
+
     page.add(
         item: pdfWidgets.Positioned(
-            right: 0.0,
-            bottom: 0.0,
+            left: left,
+            right: right,
+            bottom: bottom,
+            top: top,
             child: pw.Align(
                 alignment: pw.Alignment.bottomRight,
                 child: pw.Container(
-                  width: 220,
-                  height: 220,
+                  width: 120,
+                  height: 120,
                   child: pw.Image(signatureImage),
                 ))));
 
@@ -206,8 +213,9 @@ class PdfMutableDocument {
     return _PdfFileHandler.readFile(assetname);
   }
 
-  static Future<Uint8List> sign(
-      String assetname, Uint8List signatureImage) async {
-    return _PdfFileHandler.sign(assetname, pw.MemoryImage(signatureImage));
+  static Future<Uint8List> sign(String assetname, Uint8List signatureImage,
+      {double? left, double? top, double? right, double? bottom}) async {
+    return _PdfFileHandler.sign(assetname, pw.MemoryImage(signatureImage),
+        left: left, top: top, right: right, bottom: bottom);
   }
 }
